@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - Assessment AI{% endblock %}
+
+{% block main_content %}
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Admin Dashboard</h1>
+    <div>
+      <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">
+        <i class="fas fa-user-plus"></i> Add User
+      </a>
+    </div>
+  </div>
+
+  <!-- Overview Stats -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="stats-card-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stats-card-content">
+          <div class="stats-card-title">Total Users</div>
+          <div class="stats-card-value">{{ user_count }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="stats-card-icon">
+          <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <div class="stats-card-content">
+          <div class="stats-card-title">Teachers</div>
+          <div class="stats-card-value">{{ teacher_count }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="stats-card-icon">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="stats-card-content">
+          <div class="stats-card-title">Assessments</div>
+          <div class="stats-card-value">{{ assessment_count }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stats-card">
+        <div class="stats-card-icon">
+          <i class="fas fa-th-large"></i>
+        </div>
+        <div class="stats-card-content">
+          <div class="stats-card-title">Website Sections</div>
+          <div class="stats-card-value">{{ section_count }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Recent Users -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Recent Users</h5>
+          <a href="{{ url_for('admin.manage_users') }}" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="card-body">
+          {% if recent_users %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user in recent_users %}
+                    <tr>
+                      <td>{{ user.username }}</td>
+                      <td>{{ user.role|capitalize }}</td>
+                      <td>{{ user.created_at.strftime('%d %b %Y') }}</td>
+                      <td>
+                        <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p class="text-muted">No users found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Website Customization -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Website Customization</h5>
+          <a href="{{ url_for('admin.website_customization') }}" class="btn btn-sm btn-outline-primary">Customize</a>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="dashboard-card text-center">
+                <i class="fas fa-file-code fa-2x text-primary mb-2"></i>
+                <h6>Templates</h6>
+                <p class="dashboard-card-value">{{ template_count }}</p>
+                <a href="{{ url_for('admin.manage_templates') }}" class="btn btn-sm btn-outline-primary">Manage</a>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="dashboard-card text-center">
+                <i class="fas fa-th-large fa-2x text-primary mb-2"></i>
+                <h6>Sections</h6>
+                <p class="dashboard-card-value">{{ section_count }}</p>
+                <a href="{{ url_for('admin.manage_sections') }}" class="btn btn-sm btn-outline-primary">Manage</a>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="dashboard-card text-center">
+                <i class="fas fa-columns fa-2x text-primary mb-2"></i>
+                <h6>Layouts</h6>
+                <p class="dashboard-card-value">{{ layout_count }}</p>
+                <a href="{{ url_for('admin.manage_layouts') }}" class="btn btn-sm btn-outline-primary">Manage</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- System Overview -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">System Overview</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="dashboard-card">
+                <h6 class="dashboard-card-title">Categories</h6>
+                <p class="dashboard-card-value">{{ category_count }}</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="dashboard-card">
+                <h6 class="dashboard-card-title">Modules</h6>
+                <p class="dashboard-card-value">{{ module_count }}</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="dashboard-card">
+                <h6 class="dashboard-card-title">System Status</h6>
+                <p class="text-success"><i class="fas fa-check-circle"></i> All systems operational</p>
+                <a href="{{ url_for('admin.system_settings') }}" class="btn btn-sm btn-outline-primary">System Settings</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
